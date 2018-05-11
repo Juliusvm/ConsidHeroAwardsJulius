@@ -1,0 +1,107 @@
+﻿@model ConsidTaskJulius.Viewmodels.StoreViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CompanyID" class="control-label"></label>
+                <select asp-for="CompanyID" class="form-control" asp-items="@(new SelectList(Model.companies, "Id", "Name"))"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" id="NameValue" required="true" pattern="^[a-zA-ZäöåÄÖÅ, , 0-9]{0,100}$" title="Name can only contain letters and numbers!" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" required="true" pattern="^[a-zA-ZäöåÄÖÅ, , 0-9]{0,512}$" title="Address can only contain letters and numbers!" id="AddressValue" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" required="true" pattern="^[a-zA-ZäöåÄÖÅ]{0,512}$" title="City can only contain letters!" id="CityValue" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zip" class="control-label"></label>
+                <input asp-for="Zip" required="true" pattern="^[0-9]{0,16}$" title="ZIP must be numeric and between 0 and 16 numbers long" id="ZipValue" class="form-control" />
+                <span asp-validation-for="Zip" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <input asp-for="Country" required="true" pattern="^[a-zA-ZäöåÄÖÅ]{0,50}$" title="Country can only contain letters!" id="CountryValue" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" pattern="^[0-9]*[.]*[0-9]*" title="Longitude must be numeric" id="LongitudeValue" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" pattern="^[0-9]*[.]*[0-9]*" title="Latitude must be numeric" id="LatitudeValue" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCEHMsImpYy836a04AGsGV1_Y-ib_BFzN0"></script>
+
+<script type="text/javascript">
+    google.maps.event.addDomListener(window, 'load', function () {
+        var places = new google.maps.places.Autocomplete(document.getElementById('AddressValue'));
+        places.setTypes(['address'])
+        google.maps.event.addListener(places, 'place_changed', function () {
+            var place = places.getPlace();
+            var address = place.formatted_address;
+            var latitude = place.geometry.location.lat();
+            var longitude = place.geometry.location.lng();
+
+
+
+            var addressComponents = place.address_components;
+            addressComponents.forEach(function (element) {
+                if (element.types[0] == "country")
+                    document.getElementById("CountryValue").value = element.long_name
+            });
+
+            addressComponents.forEach(function (element) {
+                if (element.types[0] == "route")
+                    document.getElementById("AddressValue").value = element.long_name
+            });
+
+            addressComponents.forEach(function (element) {
+                if (element.types[0] == "postal_code")
+                    document.getElementById("ZipValue").value = element.long_name.replace(/ /g, '')
+            });
+            addressComponents.forEach(function (element) {
+                if (element.types[0] == "postal_town")
+                    document.getElementById("CityValue").value = element.long_name
+            });
+            addressComponents.forEach(function (element) {
+                if (element.types[0] == "street_number")
+                    document.getElementById("AddressValue").value += " " + element.long_name
+            });
+
+            document.getElementById('LongitudeValue').value = longitude;
+            document.getElementById('LatitudeValue').value = latitude;
+
+        });
+    });
+
+</script>
