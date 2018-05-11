@@ -21,14 +21,14 @@ namespace ConsidTaskJulius.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var companies = await companyRepository.GetCompanies();
+            var companies = await companyRepository.List();
             return View(companies);
         }
 
         [HttpGet]
         public async Task<ActionResult> Delete(Guid Id)
         {
-            Companies company = await companyRepository.GetCompany(Id);
+            Companies company = await companyRepository.GetById(Id);
             return View(company);
         }
 
@@ -37,12 +37,12 @@ namespace ConsidTaskJulius.Controllers
         public async Task<ActionResult> DeleteCompany(Guid Id)
         {
 
-            var company = await companyRepository.GetCompany(Id);
+            var company = await companyRepository.GetById(Id);
             if (company == null)
                 return RedirectToAction("Index");
 
 
-            await companyRepository.DeleteCompany(company);
+            companyRepository.Delete(company);
             return RedirectToAction("Index");
         }
 
@@ -61,7 +61,7 @@ namespace ConsidTaskJulius.Controllers
             {
                 return View();
             }
-            await companyRepository.CreateCompany(company);
+            await companyRepository.Create(company);
             return RedirectToAction("Index");
         }
 
@@ -69,7 +69,7 @@ namespace ConsidTaskJulius.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit(Guid Id)
         {
-            Companies company = await companyRepository.GetCompany(Id);
+            Companies company = await companyRepository.GetById(Id);
             return View(company);
         }
 
@@ -84,7 +84,7 @@ namespace ConsidTaskJulius.Controllers
             }
 
 
-            await companyRepository.UpdateCompany(company);
+            companyRepository.Update(company);
             return RedirectToAction("Index");
         }
 

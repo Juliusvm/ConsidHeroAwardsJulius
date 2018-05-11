@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConsidTaskJulius.Models
 {
-    public partial class Stores
+    public partial class Stores : BaseEntity
     {
-        [Required]
-        public Guid Id { get; set; }
 
         [Required]
         public Guid CompanyId { get; set; }
@@ -29,8 +27,6 @@ namespace ConsidTaskJulius.Models
 
         [Required]
         public string Country { get; set; }
-
-        
         public string Longitude { get; set; }
         public string Latitude { get; set; }
 

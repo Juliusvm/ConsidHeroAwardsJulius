@@ -5,16 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConsidTaskJulius.Models
 {
-    public partial class Companies
+    public partial class Companies : BaseEntity
     {
         public Companies()
         {
             Stores = new HashSet<Stores>();
         }
-
-        [Required]
-        [RegularExpression(Regex.Guid, ErrorMessage = "Invalid GUID")]
-        public Guid Id { get; set; }
 
         [Required]
         [RegularExpression(Regex.CompanyName, ErrorMessage ="Company can only contain numbers and letters!")]

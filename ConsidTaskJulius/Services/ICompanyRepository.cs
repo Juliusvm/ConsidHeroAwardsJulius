@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConsidTaskJulius.Models;
+using ConsidTaskJulius.Services;
 
 namespace ConsidTaskJulius.Repository
 {
-    public interface ICompanyRepository
+    public interface ICompanyRepository : IRepository<Companies>
     {
-        Task<Companies> CreateCompany(Companies company);
-        Task<Companies> DeleteCompany(Companies company);
-        Task<List<Companies>> GetCompanies();
-        Task<Companies> GetCompany(Guid companyID);
-        Task<bool> UpdateCompany(Companies company);
+
     }
 }

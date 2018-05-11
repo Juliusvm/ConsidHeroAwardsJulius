@@ -16,50 +16,44 @@ namespace ConsidTaskJulius.Repository
         {
             db = DB;
         }
-        public async Task<Companies> CreateCompany(Companies company)
+   
+        public Task<Companies> GetById(Guid id)
         {
-            db.Companies.Add(company);
-            await db.SaveChangesAsync();
-            return company;
+            return db.Companies.FindAsync(id); ;
         }
 
-        public async Task<List<Companies>> GetCompanies()
+        public Task<List<Companies>> List()
         {
-            var companies = await db.Companies.Include(c => c.Stores).ToListAsync();
+            return db.Companies.Include(c => c.Stores).ToListAsync();
+        }
+
+        public Task<int> Create(Companies entity)
+        {
+            db.Companies.Add(entity);
+            return db.SaveChangesAsync();
          
-            return companies;
-
         }
 
-        public async Task<Companies> DeleteCompany(Companies company)
+        public void Update(Companies entity)
         {
 
+            db.Companies.Update(entity);
+            db.SaveChangesAsync();
+            
+        }
+
+        public void Delete(Companies entity)
+        {
             var companyStores = (from store in db.Stores
-                     where store.CompanyId == company.Id
-                     select store).ToList();
+                                 where store.CompanyId == entity.Id
+                                 select store).ToList();
 
 
             db.Stores.RemoveRange(companyStores);
-            db.Companies.Remove(company);
-   
-            await db.SaveChangesAsync();
-            return company;
+            db.Companies.Remove(entity);
+
+            db.SaveChangesAsync();
+           
         }
-
-        public async Task<Companies> GetCompany(Guid companyID)
-        {
-            var company = await db.Companies.FindAsync(companyID);
-            return company;
-        }
-
-        public async Task<bool> UpdateCompany(Companies company)
-        {
-
-            db.Companies.Update(company);
-            await db.SaveChangesAsync();
-            return true;
-
-        }
-
     }
 }

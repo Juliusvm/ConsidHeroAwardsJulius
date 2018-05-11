@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ConsidTaskJulius.Models;
-using ConsidTaskJulius.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ConsidTaskJulius.Controllers
 {

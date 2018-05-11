@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConsidTaskJulius.Models;
+using ConsidTaskJulius.Services;
 
 namespace ConsidTaskJulius.Repository
 {
-    public interface IStoreRepository
+    public interface IStoreRepository : IRepository<Stores>
     {
-        Task<Stores> CreateStore(Stores store);
-        Task<Stores> DeleteStore(Stores store);
-        Task<Stores> GetStore(Guid storeID);
-        Task<List<Stores>> GetStores();
-        Task<bool> UpdateStore(Stores store);
+        
     }
 }

@@ -25,7 +25,7 @@ namespace ConsidTaskJulius.Models
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var s = await storeRepository.GetStores();
+            var s = await storeRepository.List();
             return View(s);
         }
 
@@ -33,7 +33,7 @@ namespace ConsidTaskJulius.Models
         public async Task<ActionResult> Create()
         {
             StoreViewModel storeViewModel = new StoreViewModel();
-            storeViewModel.companies = await companyRepository.GetCompanies();
+            storeViewModel.companies = await companyRepository.List();
   
             return View(storeViewModel);
 
@@ -45,7 +45,7 @@ namespace ConsidTaskJulius.Models
 
             if (!ModelState.IsValid)
             {
-                storeViewModel.companies = await companyRepository.GetCompanies();
+                storeViewModel.companies = await companyRepository.List();
                 return View(storeViewModel);
             }
 
@@ -53,7 +53,7 @@ namespace ConsidTaskJulius.Models
             storeToCreate.Id = Guid.NewGuid();
 
 
-            await storeRepository.CreateStore(storeToCreate);
+            await storeRepository.Create(storeToCreate);
             return RedirectToAction("Index");
 
         }
@@ -62,7 +62,7 @@ namespace ConsidTaskJulius.Models
         [HttpGet]
         public async Task<ActionResult> Delete(Guid Id)
         {
-            Stores store = await storeRepository.GetStore(Id);
+            Stores store = await storeRepository.GetById(Id);
             return View(store);
         }
 
@@ -71,12 +71,12 @@ namespace ConsidTaskJulius.Models
         public async Task<ActionResult> DeleteFromDB(Guid Id)
         {
 
-            var storeToDelete = await storeRepository.GetStore(Id);
+            var storeToDelete = await storeRepository.GetById(Id);
             if (storeToDelete == null)
                 return RedirectToAction("Index");
 
 
-            await storeRepository.DeleteStore((Stores)storeToDelete);
+            storeRepository.Delete(storeToDelete);
             return RedirectToAction("Index");
         }
 
@@ -84,8 +84,8 @@ namespace ConsidTaskJulius.Models
         [HttpGet]
         public async Task<ActionResult> Edit(Guid Id)
         {
-            Stores store = await storeRepository.GetStore(Id);
-            List<Companies> companies = await companyRepository.GetCompanies();
+            Stores store = await storeRepository.GetById(Id);
+            List<Companies> companies = await companyRepository.List();
             StoreViewModel storeViewModel = StoreViewModelConverter.fromStore(store, new StoreViewModel(), companies);
             return View(storeViewModel);
         }
@@ -97,13 +97,13 @@ namespace ConsidTaskJulius.Models
 
             if (!ModelState.IsValid)
             {
-                storeViewModel.companies = await companyRepository.GetCompanies();
+                storeViewModel.companies = await companyRepository.List();
                 return View(storeViewModel);
             }
 
 
             Stores store = StoreViewModelConverter.toStore(storeViewModel, new Stores());
-            await storeRepository.UpdateStore(store);
+            storeRepository.Update(store);
             
             return RedirectToAction("Index");
         }
